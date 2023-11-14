@@ -60,3 +60,7 @@ GTAGS
 # VSCode settings
 
 /.vscode/
+*.nro
+*.elf
+build/
+*.nacp
