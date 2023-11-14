@@ -15,8 +15,6 @@
 //    PC speaker driver for Linux.
 //
 
-#include "config.h"
-
 #ifdef HAVE_LINUX_KD_H
 
 #include <stdio.h>
@@ -65,7 +63,7 @@ static void AdjustedSleep(unsigned int ms)
     start_time = SDL_GetTicks();
 
     SDL_Delay(ms);
-    
+
     end_time = SDL_GetTicks();
 
     if (end_time > start_time)
@@ -93,7 +91,7 @@ static int SoundThread(void *unused)
     int frequency;
     int duration;
     int cycles;
-    
+
     while (sound_thread_running)
     {
         callback(&duration, &frequency);
@@ -129,8 +127,8 @@ static int PCSound_Linux_Init(pcsound_callback_func callback_func)
     {
         // Don't have permissions for the console device?
 
-	fprintf(stderr, "PCSound_Linux_Init: Failed to open '%s': %s\n",
-			CONSOLE_DEVICE, strerror(errno));
+        fprintf(stderr, "PCSound_Linux_Init: Failed to open '%s': %s\n",
+                CONSOLE_DEVICE, strerror(errno));
         return 0;
     }
 
@@ -143,7 +141,7 @@ static int PCSound_Linux_Init(pcsound_callback_func callback_func)
     }
 
     // Start a thread up to generate PC speaker output
-    
+
     callback = callback_func;
     sound_thread_running = 1;
 
@@ -160,12 +158,10 @@ static void PCSound_Linux_Shutdown(void)
     close(console_handle);
 }
 
-pcsound_driver_t pcsound_linux_driver =
-{
+pcsound_driver_t pcsound_linux_driver = {
     "Linux",
     PCSound_Linux_Init,
     PCSound_Linux_Shutdown,
 };
 
 #endif /* #ifdef HAVE_LINUX_KD_H */
-

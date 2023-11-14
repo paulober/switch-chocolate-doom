@@ -16,7 +16,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "config.h"
 #include "textscreen.h"
 
 #include "execute.h"
@@ -40,12 +39,11 @@
 
 #define WINDOW_HELP_URL "https://www.chocolate-doom.org/setup"
 
-static const int cheat_sequence[] =
-{
-    KEY_UPARROW, KEY_UPARROW, KEY_DOWNARROW, KEY_DOWNARROW,
-    KEY_LEFTARROW, KEY_RIGHTARROW, KEY_LEFTARROW, KEY_RIGHTARROW,
-    'b', 'a', KEY_ENTER, 0
-};
+static const int cheat_sequence[] = {
+    KEY_UPARROW,   KEY_UPARROW,    KEY_DOWNARROW,
+    KEY_DOWNARROW, KEY_LEFTARROW,  KEY_RIGHTARROW,
+    KEY_LEFTARROW, KEY_RIGHTARROW, 'b',
+    'a',           KEY_ENTER,      0};
 
 static unsigned int cheat_sequence_index = 0;
 
@@ -69,7 +67,7 @@ static void SensibleDefaults(void)
     key_invleft = '[';
     key_invright = ']';
     key_message_refresh = '\'';
-    key_mission = 'i';              // Strife keys
+    key_mission = 'i'; // Strife keys
     key_invpop = 'o';
     key_invkey = 'p';
     key_multi_msgplayer[0] = 'g';
@@ -80,10 +78,10 @@ static void SensibleDefaults(void)
     key_multi_msgplayer[5] = 'b';
     key_multi_msgplayer[6] = 'n';
     key_multi_msgplayer[7] = 'm';
-    mousebprevweapon = 4;           // Scroll wheel = weapon cycle
+    mousebprevweapon = 4; // Scroll wheel = weapon cycle
     mousebnextweapon = 3;
     snd_musicdevice = 3;
-    joybspeed = 29;                 // Always run
+    joybspeed = 29; // Always run
     vanilla_savegame_limit = 0;
     vanilla_keyboard_mapping = 0;
     vanilla_demo_limit = 0;
@@ -140,12 +138,11 @@ static void QuitConfirm(void *unused1, void *unused2)
 
     window = TXT_NewWindow(NULL);
 
-    TXT_AddWidgets(window, 
+    TXT_AddWidgets(window,
                    label = TXT_NewLabel("Exiting setup.\nSave settings?"),
                    TXT_NewStrut(24, 0),
                    yes_button = TXT_NewButton2("  Yes  ", DoQuit, DoQuit),
-                   no_button = TXT_NewButton2("  No   ", DoQuit, NULL),
-                   NULL);
+                   no_button = TXT_NewButton2("  No   ", DoQuit, NULL), NULL);
 
     TXT_SetWidgetAlign(label, TXT_HORIZ_CENTER);
     TXT_SetWidgetAlign(yes_button, TXT_HORIZ_CENTER);
@@ -153,7 +150,7 @@ static void QuitConfirm(void *unused1, void *unused2)
 
     // Only an "abort" button in the middle.
     TXT_SetWindowAction(window, TXT_HORIZ_LEFT, NULL);
-    TXT_SetWindowAction(window, TXT_HORIZ_CENTER, 
+    TXT_SetWindowAction(window, TXT_HORIZ_CENTER,
                         TXT_NewWindowAbortAction(window));
     TXT_SetWindowAction(window, TXT_HORIZ_RIGHT, NULL);
 }
@@ -161,7 +158,7 @@ static void QuitConfirm(void *unused1, void *unused2)
 static void LaunchDoom(void *unused1, void *unused2)
 {
     execute_context_t *exec;
-    
+
     // Save configuration first
 
     M_SaveDefaults();
@@ -215,21 +212,21 @@ void MainMenu(void)
 
     TXT_SetWindowHelpURL(window, WINDOW_HELP_URL);
 
-    TXT_AddWidgets(window,
-        TXT_NewButton2("Configure Display",
-                       (TxtWidgetSignalFunc) ConfigDisplay, NULL),
-        TXT_NewButton2("Configure Sound",
-                       (TxtWidgetSignalFunc) ConfigSound, NULL),
+    TXT_AddWidgets(
+        window,
+        TXT_NewButton2("Configure Display", (TxtWidgetSignalFunc) ConfigDisplay,
+                       NULL),
+        TXT_NewButton2("Configure Sound", (TxtWidgetSignalFunc) ConfigSound,
+                       NULL),
         TXT_NewButton2("Configure Keyboard",
                        (TxtWidgetSignalFunc) ConfigKeyboard, NULL),
-        TXT_NewButton2("Configure Mouse",
-                       (TxtWidgetSignalFunc) ConfigMouse, NULL),
+        TXT_NewButton2("Configure Mouse", (TxtWidgetSignalFunc) ConfigMouse,
+                       NULL),
         TXT_NewButton2("Configure Gamepad/Joystick",
                        (TxtWidgetSignalFunc) ConfigJoystick, NULL),
         TXT_NewButton2("Compatibility",
                        (TxtWidgetSignalFunc) CompatibilitySettings, NULL),
-        GetLaunchButton(),
-        TXT_NewStrut(0, 1),
+        GetLaunchButton(), TXT_NewStrut(0, 1),
         TXT_NewButton2("Start a Network Game",
                        (TxtWidgetSignalFunc) StartMultiGame, NULL),
         TXT_NewButton2("Join a Network Game",
@@ -241,8 +238,8 @@ void MainMenu(void)
     quit_action = TXT_NewWindowAction(KEY_ESCAPE, "Quit");
     warp_action = TXT_NewWindowAction(KEY_F2, "Warp");
     TXT_SignalConnect(quit_action, "pressed", QuitConfirm, NULL);
-    TXT_SignalConnect(warp_action, "pressed",
-                      (TxtWidgetSignalFunc) WarpMenu, NULL);
+    TXT_SignalConnect(warp_action, "pressed", (TxtWidgetSignalFunc) WarpMenu,
+                      NULL);
     TXT_SetWindowAction(window, TXT_HORIZ_LEFT, quit_action);
     TXT_SetWindowAction(window, TXT_HORIZ_CENTER, warp_action);
 
@@ -276,10 +273,9 @@ static void SetIcon(void)
 {
     SDL_Surface *surface;
 
-    surface = SDL_CreateRGBSurfaceFrom((void *) setup_icon_data, setup_icon_w,
-                                       setup_icon_h, 32, setup_icon_w * 4,
-                                       0xffu << 24, 0xffu << 16,
-                                       0xffu << 8, 0xffu << 0);
+    surface = SDL_CreateRGBSurfaceFrom(
+        (void *) setup_icon_data, setup_icon_w, setup_icon_h, 32,
+        setup_icon_w * 4, 0xffu << 24, 0xffu << 16, 0xffu << 8, 0xffu << 0);
 
     SDL_SetWindowIcon(TXT_SDLWindow, surface);
     SDL_FreeSurface(surface);
@@ -289,8 +285,7 @@ static void SetWindowTitle(void)
 {
     char *title;
 
-    title = M_StringReplace(PACKAGE_NAME " Setup ver " PACKAGE_VERSION,
-                            "Doom",
+    title = M_StringReplace(PACKAGE_NAME " Setup ver " PACKAGE_VERSION, "Doom",
                             GetGameTitle());
 
 
@@ -320,7 +315,7 @@ static void InitTextscreen(void)
 }
 
 
-// 
+//
 // Initialize and run the textscreen GUI.
 //
 

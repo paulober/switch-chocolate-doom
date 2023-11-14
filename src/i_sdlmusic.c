@@ -25,7 +25,6 @@
 #include "SDL.h"
 #include "SDL_mixer.h"
 
-#include "config.h"
 #include "doomtype.h"
 #include "memio.h"
 #include "mus2mid.h"
@@ -192,7 +191,9 @@ static boolean I_SDL_InitMusic(void)
         {
             fprintf(stderr, "Unable to set up sound.\n");
         }
-        else if (Mix_OpenAudioDevice(snd_samplerate, AUDIO_S16SYS, 2, 1024, NULL, SDL_AUDIO_ALLOW_FREQUENCY_CHANGE) < 0)
+        else if (Mix_OpenAudioDevice(snd_samplerate, AUDIO_S16SYS, 2, 1024,
+                                     NULL,
+                                     SDL_AUDIO_ALLOW_FREQUENCY_CHANGE) < 0)
         {
             fprintf(stderr, "Error initializing SDL_mixer: %s\n",
                     Mix_GetError());
@@ -334,7 +335,7 @@ static void I_SDL_UnRegisterSong(void *handle)
     }
 }
 
-// Determine whether memory block is a .mid file 
+// Determine whether memory block is a .mid file
 
 static boolean IsMid(byte *mem, int len)
 {
@@ -388,7 +389,7 @@ static void *I_SDL_RegisterSong(void *data, int len)
     }
     else
     {
-	// Assume a MUS file and try to convert
+        // Assume a MUS file and try to convert
 
         ConvertMus(data, len, filename);
     }
@@ -430,18 +431,12 @@ static boolean I_SDL_MusicIsPlaying(void)
     return Mix_PlayingMusic();
 }
 
-static const snddevice_t music_sdl_devices[] =
-{
-    SNDDEVICE_PAS,
-    SNDDEVICE_GUS,
-    SNDDEVICE_WAVEBLASTER,
-    SNDDEVICE_SOUNDCANVAS,
-    SNDDEVICE_GENMIDI,
-    SNDDEVICE_AWE32,
+static const snddevice_t music_sdl_devices[] = {
+    SNDDEVICE_PAS,         SNDDEVICE_GUS,     SNDDEVICE_WAVEBLASTER,
+    SNDDEVICE_SOUNDCANVAS, SNDDEVICE_GENMIDI, SNDDEVICE_AWE32,
 };
 
-const music_module_t music_sdl_module =
-{
+const music_module_t music_sdl_module = {
     music_sdl_devices,
     arrlen(music_sdl_devices),
     I_SDL_InitMusic,
@@ -454,7 +449,7 @@ const music_module_t music_sdl_module =
     I_SDL_PlaySong,
     I_SDL_StopSong,
     I_SDL_MusicIsPlaying,
-    NULL,  // Poll
+    NULL, // Poll
 };
 
 

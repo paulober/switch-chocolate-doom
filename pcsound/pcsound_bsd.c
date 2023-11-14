@@ -12,11 +12,9 @@
 // GNU General Public License for more details.
 //
 // DESCRIPTION:
-//    PC speaker driver for [Open]BSD 
+//    PC speaker driver for [Open]BSD
 //    (Should be NetBSD as well, but untested).
 //
-
-#include "config.h"
 
 // OpenBSD/NetBSD:
 
@@ -56,21 +54,21 @@
 #define SPEAKER_DEVICE "/dev/speaker"
 
 //
-// This driver is far more complicated than it should be, because 
+// This driver is far more complicated than it should be, because
 // OpenBSD has sucky support for threads.  Because multithreading
 // is done in userspace, invoking the ioctl to make the speaker
-// beep will lock all threads until the beep has completed.  
-// 
+// beep will lock all threads until the beep has completed.
+//
 // Thus, to get the beeping to occur in real-time, we must invoke
-// the ioctl in a separate process.  To do this, a separate 
+// the ioctl in a separate process.  To do this, a separate
 // sound server is forked that listens on a socket for tones to
 // play.  When a tone is received, a reply is sent back to the
 // main process and the tone played.
 //
 // Meanwhile, back in the main process, there is a sound thread
-// that runs, invoking the pcsound callback function to get 
+// that runs, invoking the pcsound callback function to get
 // more tones.  This blocks on the sound server socket, waiting
-// for replies.  In this way, when the sound server finishes 
+// for replies.  In this way, when the sound server finishes
 // playing a tone, the next one is sent.
 //
 // This driver is a bit less accurate than the others, because
@@ -110,7 +108,7 @@ static void AdjustedBeep(int speaker_handle, int ms, int freq)
 
     start_time = SDL_GetTicks();
 
-    tone.duration = ms / 10;        // in 100ths of a second
+    tone.duration = ms / 10; // in 100ths of a second
     tone.frequency = freq;
 
     // Always a positive duration
@@ -125,7 +123,7 @@ static void AdjustedBeep(int speaker_handle, int ms, int freq)
         perror("ioctl");
         return;
     }
-    
+
     end_time = SDL_GetTicks();
 
     if (end_time > start_time)
@@ -189,8 +187,8 @@ static int StartSoundServer(void)
     {
         // Don't have permissions for the console device?
 
-	fprintf(stderr, "StartSoundServer: Failed to open '%s': %s\n",
-                        SPEAKER_DEVICE, strerror(errno));
+        fprintf(stderr, "StartSoundServer: Failed to open '%s': %s\n",
+                SPEAKER_DEVICE, strerror(errno));
         return 0;
     }
 
@@ -206,7 +204,7 @@ static int StartSoundServer(void)
     // Start a separate process to generate PC speaker output
     // We can't use the SDL threading functions because OpenBSD's
     // threading sucks :-(
-    
+
     result = fork();
 
     if (result < 0)
@@ -255,14 +253,14 @@ static int SoundThread(void *unused)
 
         callback(&duration, &frequency);
 
-//printf("dur: %i, freq: %i\n", duration, frequency);
+        //printf("dur: %i, freq: %i\n", duration, frequency);
 
         // Build up a tone structure and send to the sound server
 
         tone.frequency = frequency;
         tone.duration = duration;
 
-        if (write(sound_server_pipe[0], &tone, sizeof(tone_t)) < 0) 
+        if (write(sound_server_pipe[0], &tone, sizeof(tone_t)) < 0)
         {
             perror("write");
             break;
@@ -310,12 +308,10 @@ static void PCSound_BSD_Shutdown(void)
     StopSoundServer();
 }
 
-pcsound_driver_t pcsound_bsd_driver =
-{
+pcsound_driver_t pcsound_bsd_driver = {
     "BSD",
     PCSound_BSD_Init,
     PCSound_BSD_Shutdown,
 };
 
 #endif /* #ifdef HAVE_BSD_SPEAKER */
-

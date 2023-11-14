@@ -18,8 +18,6 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
-#include "config.h"
-
 #include "m_argv.h"
 #include "net_defs.h"
 
@@ -27,11 +25,12 @@
 #include "net_server.h"
 #include "z_zone.h"
 
+#ifndef __SWITCH__
 void NET_CL_Run(void)
 {
     // No client present :-)
     //
-    // This is here because the server code sometimes runs this 
+    // This is here because the server code sometimes runs this
     // to let the client do some processing if it needs to.
     // In a standalone dedicated server, we don't have a client.
 }
@@ -44,4 +43,4 @@ void D_DoomMain(void)
 
     NET_DedicatedServer();
 }
-
+#endif

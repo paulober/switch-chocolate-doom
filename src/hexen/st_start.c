@@ -15,12 +15,9 @@
 //
 
 
-
 // HEADER FILES ------------------------------------------------------------
 
 #include <stdarg.h>
-
-#include "config.h"
 
 #include "h2def.h"
 #include "i_system.h"
@@ -31,17 +28,17 @@
 
 
 // MACROS ------------------------------------------------------------------
-#define ST_MAX_NOTCHES		32
-#define ST_NOTCH_WIDTH		16
-#define ST_NOTCH_HEIGHT		23
-#define ST_PROGRESS_X		64      // Start of notches x screen pos.
-#define ST_PROGRESS_Y		441     // Start of notches y screen pos.
+#define ST_MAX_NOTCHES  32
+#define ST_NOTCH_WIDTH  16
+#define ST_NOTCH_HEIGHT 23
+#define ST_PROGRESS_X   64  // Start of notches x screen pos.
+#define ST_PROGRESS_Y   441 // Start of notches y screen pos.
 
-#define ST_NETPROGRESS_X		288
-#define ST_NETPROGRESS_Y		32
-#define ST_NETNOTCH_WIDTH		8
-#define ST_NETNOTCH_HEIGHT		16
-#define ST_MAX_NETNOTCHES		8
+#define ST_NETPROGRESS_X   288
+#define ST_NETPROGRESS_Y   32
+#define ST_NETNOTCH_WIDTH  8
+#define ST_NETNOTCH_HEIGHT 16
+#define ST_MAX_NETNOTCHES  8
 
 byte *ST_LoadScreen(void);
 void ST_UpdateNotches(int notchPosition);
@@ -75,8 +72,7 @@ static const byte notchTable[] = {
     0x00, 0x00, 0x00, 0x00, 0x01, 0x80, 0x01, 0x80, 0x01, 0x80, 0x01, 0x80,
     0x03, 0xC0, 0x03, 0xC0, 0x03, 0xC0, 0x03, 0xC0, 0x03, 0x80, 0x02, 0x40,
     0x0F, 0x90, 0x1B, 0x68, 0x3D, 0xB4, 0x1F, 0xF0, 0x1F, 0xF8, 0x1F, 0xF8,
-    0x10, 0x28, 0x08, 0x28, 0x29, 0x08, 0x07, 0xE8, 0x1C, 0x50
-};
+    0x10, 0x28, 0x08, 0x28, 0x29, 0x08, 0x07, 0xE8, 0x1C, 0x50};
 
 
 // Red Network Progress notches
@@ -95,11 +91,9 @@ static const byte netnotchTable[] = {
 
     // plane 3
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00
-};
+    0x00, 0x00, 0x00, 0x00};
 
 // CODE --------------------------------------------------------------------
-
 
 
 //--------------------------------------------------------------------------
@@ -119,7 +113,7 @@ void ST_Init(void)
 {
     byte *pal;
     byte *buffer;
-    
+
     using_graphical_startup = false;
 
     if (graphical_startup && !debugmode && !testcontrols)
@@ -288,7 +282,6 @@ void ST_RealMessage(const char *message, ...)
 }
 
 
-
 //==========================================================================
 //
 // ST_LoadScreen - loads startup graphic
@@ -307,4 +300,3 @@ byte *ST_LoadScreen(void)
     W_ReadLump(lump, buffer);
     return (buffer);
 }
-

@@ -16,8 +16,6 @@
 //	Main program, simply calls D_DoomMain high level loop.
 //
 
-#include "config.h"
-
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,6 +27,10 @@
 #include "m_argv.h"
 #include "m_misc.h"
 
+#ifdef __SWITCH__
+#include <arpa/inet.h>
+#include <switch.h>
+#endif
 
 //
 // D_DoomMain()
@@ -36,12 +38,31 @@
 // calls all startup code, parses command line options.
 //
 
-void D_DoomMain (void);
+void D_DoomMain(void);
 
 int main(int argc, char **argv)
 {
-    // save arguments
+#ifdef __SWITCH__
+    // Initialize console. Using NULL as the second argument tells the console library to use the internal console structure as current one.
+    //consoleInit(NULL);
 
+    // Configure supported input layout: a single player with standard controller.
+    //padConfigureInput(1, HidNpadStyleSet_NpadStandard);
+    //PadState pad;
+    //padInitializeDefault(&pad);
+
+    // Initialize nxlink sockets
+    socketInitializeDefault();
+
+    printf("nxlink host is %s\n", inet_ntoa(__nxlink_host));
+
+    // Redirect stdout and stderr to nxlink server
+    nxlinkStdio();
+
+    printf("Chocolate Doom NX v%s\n", PACKAGE_VERSION);
+#endif
+
+    // save arguments
     myargc = argc;
     myargv = malloc(argc * sizeof(char *));
     assert(myargv != NULL);
@@ -54,7 +75,8 @@ int main(int argc, char **argv)
     //!
     // Print the program version and exit.
     //
-    if (M_ParmExists("-version") || M_ParmExists("--version")) {
+    if (M_ParmExists("-version") || M_ParmExists("--version"))
+    {
         puts(PACKAGE_STRING);
         exit(0);
     }
@@ -68,14 +90,18 @@ int main(int argc, char **argv)
     M_FindResponseFile();
     M_SetExeDir();
 
-    #ifdef SDL_HINT_NO_SIGNAL_HANDLERS
+#ifdef SDL_HINT_NO_SIGNAL_HANDLERS
     SDL_SetHint(SDL_HINT_NO_SIGNAL_HANDLERS, "1");
-    #endif
+#endif
 
     // start doom
 
-    D_DoomMain ();
+    D_DoomMain();
+
+#ifdef __SWITCH__
+    socketExit();
+    //consoleExit(NULL);
+#endif
 
     return 0;
 }
-

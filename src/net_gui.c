@@ -15,13 +15,12 @@
 //
 //  * The client waiting screen when we are waiting for the server to
 //    start the game.
-//   
+//
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 
-#include "config.h"
 #include "doomkeys.h"
 
 #include "i_system.h"
@@ -76,7 +75,7 @@ static void OpenWaitDialog(void)
 
     TXT_SetWindowAction(window, TXT_HORIZ_LEFT, cancel);
     TXT_SetWindowPosition(window, TXT_HORIZ_CENTER, TXT_VERT_BOTTOM,
-                                  TXT_SCREEN_W / 2, TXT_SCREEN_H - 9);
+                          TXT_SCREEN_W / 2, TXT_SCREEN_H - 9);
 
     old_max_players = 0;
 }
@@ -152,8 +151,7 @@ static void UpdateGUI(void)
         {
             TXT_SetLabel(player_labels[i],
                          net_client_wait_data.player_names[i]);
-            TXT_SetLabel(ip_labels[i],
-                         net_client_wait_data.player_addrs[i]);
+            TXT_SetLabel(ip_labels[i], net_client_wait_data.player_addrs[i]);
         }
         else
         {
@@ -199,7 +197,7 @@ static void BuildMasterStatusWindow(void)
 
     TXT_LowerWindow(master_window);
     TXT_SetWindowPosition(master_window, TXT_HORIZ_CENTER, TXT_VERT_CENTER,
-                                         TXT_SCREEN_W / 2, TXT_SCREEN_H - 4);
+                          TXT_SCREEN_W / 2, TXT_SCREEN_H - 4);
     TXT_SetWindowAction(master_window, TXT_HORIZ_LEFT, NULL);
     TXT_SetWindowAction(master_window, TXT_HORIZ_CENTER, NULL);
     TXT_SetWindowAction(master_window, TXT_HORIZ_RIGHT, NULL);
@@ -221,13 +219,15 @@ static void CheckMasterStatus(void)
 
     if (added)
     {
-        TXT_SetLabel(master_msg_label,
+        TXT_SetLabel(
+            master_msg_label,
             "Your server is now registered with the global master server.\n"
             "Other players can find your server online.");
     }
     else
     {
-        TXT_SetLabel(master_msg_label,
+        TXT_SetLabel(
+            master_msg_label,
             "Failed to register with the master server. Your server is not\n"
             "publicly accessible. You may need to reconfigure your Internet\n"
             "router to add a port forward for UDP port 2342. Look up\n"
@@ -241,7 +241,7 @@ static void PrintSHA1Digest(const char *s, const byte *digest)
 
     printf("%s: ", s);
 
-    for (i=0; i<sizeof(sha1_digest_t); ++i)
+    for (i = 0; i < sizeof(sha1_digest_t); ++i)
     {
         printf("%02x", digest[i]);
     }
@@ -268,12 +268,12 @@ static void CheckSHA1Sums(void)
         return;
     }
 
-    correct_wad = memcmp(net_local_wad_sha1sum,
-                         net_client_wait_data.wad_sha1sum, 
-                         sizeof(sha1_digest_t)) == 0;
-    correct_deh = memcmp(net_local_deh_sha1sum,
-                         net_client_wait_data.deh_sha1sum, 
-                         sizeof(sha1_digest_t)) == 0;
+    correct_wad =
+        memcmp(net_local_wad_sha1sum, net_client_wait_data.wad_sha1sum,
+               sizeof(sha1_digest_t)) == 0;
+    correct_deh =
+        memcmp(net_local_deh_sha1sum, net_client_wait_data.deh_sha1sum,
+               sizeof(sha1_digest_t)) == 0;
     same_freedoom = net_client_wait_data.is_freedoom == net_local_is_freedoom;
 
     if (correct_wad && correct_deh && same_freedoom)
@@ -291,8 +291,7 @@ static void CheckSHA1Sums(void)
     if (!same_freedoom)
     {
         printf("Warning: Mixing Freedoom with non-Freedoom\n");
-        printf("Local: %u  Server: %i\n",
-               net_local_is_freedoom, 
+        printf("Local: %u  Server: %i\n", net_local_is_freedoom,
                net_client_wait_data.is_freedoom);
     }
 
@@ -320,37 +319,46 @@ static void CheckSHA1Sums(void)
 
         if (net_local_is_freedoom)
         {
-            TXT_AddWidget(window, TXT_NewLabel
-            ("You are using the Freedoom IWAD to play with players\n"
-             "using an official Doom IWAD.  Make sure that you are\n"
-             "playing the same levels as other players.\n"));
+            TXT_AddWidget(
+                window,
+                TXT_NewLabel(
+                    "You are using the Freedoom IWAD to play with players\n"
+                    "using an official Doom IWAD.  Make sure that you are\n"
+                    "playing the same levels as other players.\n"));
         }
         else
         {
-            TXT_AddWidget(window, TXT_NewLabel
-            ("You are using an official IWAD to play with players\n"
-             "using the Freedoom IWAD.  Make sure that you are\n"
-             "playing the same levels as other players.\n"));
+            TXT_AddWidget(
+                window,
+                TXT_NewLabel(
+                    "You are using an official IWAD to play with players\n"
+                    "using the Freedoom IWAD.  Make sure that you are\n"
+                    "playing the same levels as other players.\n"));
         }
     }
     else if (!correct_wad)
     {
-        TXT_AddWidget(window, TXT_NewLabel
-            ("Your WAD directory does not match other players in the game.\n"
-             "Check that you have loaded the exact same WAD files as other\n"
-             "players.\n"));
+        TXT_AddWidget(
+            window,
+            TXT_NewLabel(
+                "Your WAD directory does not match other players in the game.\n"
+                "Check that you have loaded the exact same WAD files as other\n"
+                "players.\n"));
     }
 
     if (!correct_deh)
     {
-        TXT_AddWidget(window, TXT_NewLabel
-            ("Your dehacked signature does not match other players in the\n"
-             "game.  Check that you have loaded the same dehacked patches\n"
-             "as other players.\n"));
+        TXT_AddWidget(
+            window,
+            TXT_NewLabel(
+                "Your dehacked signature does not match other players in the\n"
+                "game.  Check that you have loaded the same dehacked patches\n"
+                "as other players.\n"));
     }
 
-    TXT_AddWidget(window, TXT_NewLabel
-            ("If you continue, this may cause your game to desync."));
+    TXT_AddWidget(
+        window,
+        TXT_NewLabel("If you continue, this may cause your game to desync."));
 
     had_warning = true;
 }
@@ -377,12 +385,11 @@ static void CheckAutoLaunch(void)
 {
     int nodes;
 
-    if (net_client_received_wait_data
-     && net_client_wait_data.is_controller
-     && expected_nodes > 0)
+    if (net_client_received_wait_data && net_client_wait_data.is_controller &&
+        expected_nodes > 0)
     {
-        nodes = net_client_wait_data.num_players
-              + net_client_wait_data.num_drones;
+        nodes =
+            net_client_wait_data.num_players + net_client_wait_data.num_drones;
 
         if (nodes >= expected_nodes)
         {
@@ -400,8 +407,9 @@ void NET_WaitForLaunch(void)
         exit(-1);
     }
 
-    TXT_SetColor(TXT_COLOR_BLUE, 0x04, 0x14, 0x40); // Romero's "funky blue" color
-    
+    TXT_SetColor(TXT_COLOR_BLUE, 0x04, 0x14,
+                 0x40); // Romero's "funky blue" color
+
     I_InitWindowIcon();
 
     ParseCommandLineArgs();

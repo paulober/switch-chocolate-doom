@@ -15,8 +15,6 @@
 //     OPL SDL interface.
 //
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,7 +24,7 @@
 #include "SDL.h"
 #ifndef DISABLE_SDL2MIXER
 #include "SDL_mixer.h"
-#endif  // DISABLE_SDL2MIXER
+#endif // DISABLE_SDL2MIXER
 
 #include "opl3.h"
 
@@ -43,10 +41,10 @@
 
 typedef struct
 {
-    unsigned int rate;        // Number of times the timer is advanced per sec.
-    unsigned int enabled;     // Non-zero if timer is enabled.
-    unsigned int value;       // Last value that was set.
-    uint64_t expire_time;     // Calculated time that timer will expire.
+    unsigned int rate;    // Number of times the timer is advanced per sec.
+    unsigned int enabled; // Non-zero if timer is enabled.
+    unsigned int value;   // Last value that was set.
+    uint64_t expire_time; // Calculated time that timer will expire.
 } opl_timer_t;
 
 // When the callback mutex is locked using OPL_Lock, callback functions
@@ -90,8 +88,8 @@ static int register_num = 0;
 
 // Timers; DBOPL does not do timer stuff itself.
 
-static opl_timer_t timer1 = { 12500, 0, 0, 0 };
-static opl_timer_t timer2 = { 3125, 0, 0, 0 };
+static opl_timer_t timer1 = {12500, 0, 0, 0};
+static opl_timer_t timer2 = {3125, 0, 0, 0};
 
 // SDL parameters.
 
@@ -131,8 +129,8 @@ static void AdvanceTime(unsigned int nsamples)
     // Are there callbacks to invoke now?  Keep invoking them
     // until there are no more left.
 
-    while (!OPL_Queue_IsEmpty(callback_queue)
-        && current_time >= OPL_Queue_Peek(callback_queue) + pause_offset)
+    while (!OPL_Queue_IsEmpty(callback_queue) &&
+           current_time >= OPL_Queue_Peek(callback_queue) + pause_offset)
     {
         // Pop the callback from the queue to invoke it.
 
@@ -181,7 +179,7 @@ static void FillBuffer(uint8_t *buffer, unsigned int nsamples)
 static void OPL_Mix_Callback(int chan, void *stream, int len, void *udata)
 {
     unsigned int filled, buffer_samples;
-    Uint8 *buffer = (Uint8*)stream;
+    Uint8 *buffer = (Uint8 *) stream;
 
     // Repeatedly call the OPL emulator update function until the buffer is
     // full.
@@ -242,7 +240,7 @@ static void OPL_SDL_Shutdown(void)
         sdl_was_initialized = 0;
     }
 
-/*
+    /*
     if (opl_chip != NULL)
     {
         OPLDestroy(opl_chip);
@@ -272,7 +270,7 @@ static unsigned int GetSliceSize(void)
 
     // Try all powers of two, not exceeding the limit.
 
-    for (n=0;; ++n)
+    for (n = 0;; ++n)
     {
         // 2^n <= limit < 2^n+1 ?
 
@@ -300,9 +298,12 @@ static int OPL_SDL_Init(unsigned int port_base)
             return 0;
         }
 
-        if (Mix_OpenAudioDevice(opl_sample_rate, AUDIO_S16SYS, 2, GetSliceSize(), NULL, SDL_AUDIO_ALLOW_FREQUENCY_CHANGE) < 0)
+        if (Mix_OpenAudioDevice(opl_sample_rate, AUDIO_S16SYS, 2,
+                                GetSliceSize(), NULL,
+                                SDL_AUDIO_ALLOW_FREQUENCY_CHANGE) < 0)
         {
-            fprintf(stderr, "Error initialising SDL_mixer: %s\n", Mix_GetError());
+            fprintf(stderr, "Error initialising SDL_mixer: %s\n",
+                    Mix_GetError());
 
             SDL_QuitSubSystem(SDL_INIT_AUDIO);
             return 0;
@@ -310,7 +311,7 @@ static int OPL_SDL_Init(unsigned int port_base)
 
         SDL_PauseAudio(0);
 
-        // When this module shuts down, it has the responsibility to 
+        // When this module shuts down, it has the responsibility to
         // shut down SDL.
 
         sdl_was_initialized = 1;
@@ -336,9 +337,8 @@ static int OPL_SDL_Init(unsigned int port_base)
 
     if (mixing_format != AUDIO_S16SYS || mixing_channels != 2)
     {
-        fprintf(stderr, 
-                "OPL_SDL only supports native signed 16-bit LSB, "
-                "stereo format!\n");
+        fprintf(stderr, "OPL_SDL only supports native signed 16-bit LSB, "
+                        "stereo format!\n");
 
         OPL_SDL_Shutdown();
         return 0;
@@ -374,14 +374,14 @@ static unsigned int OPL_SDL_PortRead(opl_port_t port)
 
     if (timer1.enabled && current_time > timer1.expire_time)
     {
-        result |= 0x80;   // Either have expired
-        result |= 0x40;   // Timer 1 has expired
+        result |= 0x80; // Either have expired
+        result |= 0x40; // Timer 1 has expired
     }
 
     if (timer2.enabled && current_time > timer2.expire_time)
     {
-        result |= 0x80;   // Either have expired
-        result |= 0x20;   // Timer 2 has expired
+        result |= 0x80; // Either have expired
+        result |= 0x20; // Timer 2 has expired
     }
 
     return result;
@@ -397,8 +397,8 @@ static void OPLTimer_CalculateEndTime(opl_timer_t *timer)
     if (timer->enabled)
     {
         tics = 0x100 - timer->value;
-        timer->expire_time = current_time
-                           + ((uint64_t) tics * OPL_SECOND) / timer->rate;
+        timer->expire_time =
+            current_time + ((uint64_t) tics * OPL_SECOND) / timer->rate;
     }
 }
 
@@ -502,8 +502,7 @@ static void OPL_SDL_AdjustCallbacks(float factor)
     SDL_UnlockMutex(callback_queue_mutex);
 }
 
-opl_driver_t opl_sdl_driver =
-{
+opl_driver_t opl_sdl_driver = {
     "SDL",
     OPL_SDL_Init,
     OPL_SDL_Shutdown,

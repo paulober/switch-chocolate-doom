@@ -15,8 +15,6 @@
 // DESCRIPTION:
 //      FluidSynth backend
 
-#include "config.h"
-
 #ifdef HAVE_FLUIDSYNTH
 
 #include "fluidsynth.h"
@@ -305,13 +303,11 @@ static boolean I_FL_MusicIsPlaying(void)
     return (fluid_player_get_status(player) == FLUID_PLAYER_PLAYING);
 }
 
-static const snddevice_t music_fl_devices[] =
-{
+static const snddevice_t music_fl_devices[] = {
     SNDDEVICE_FSYNTH,
 };
 
-const music_module_t music_fl_module =
-{
+const music_module_t music_fl_module = {
     music_fl_devices,
     arrlen(music_fl_devices),
     I_FL_InitMusic,

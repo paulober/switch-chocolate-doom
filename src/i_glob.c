@@ -22,12 +22,11 @@
 
 #include "i_glob.h"
 #include "m_misc.h"
-#include "config.h"
 
 #if defined(_MSC_VER)
 // For Visual C++, we need to include the win_opendir module.
 #include <win_opendir.h>
-#define S_ISDIR(m)      (((m)& S_IFMT) == S_IFDIR)
+#define S_ISDIR(m) (((m) &S_IFMT) == S_IFDIR)
 #elif defined(HAVE_DIRENT_H)
 #include <dirent.h>
 #include <sys/stat.h>
@@ -95,8 +94,8 @@ static void FreeStringList(char **globs, int num_globs)
     free(globs);
 }
 
-glob_t *I_StartMultiGlob(const char *directory, int flags,
-                         const char *glob, ...)
+glob_t *I_StartMultiGlob(const char *directory, int flags, const char *glob,
+                         ...)
 {
     char **globs;
     int num_globs;
@@ -255,8 +254,8 @@ static char *NextGlob(glob_t *glob)
         {
             return NULL;
         }
-    } while (IsDirectory(glob->directory, de)
-          || !MatchesAnyGlob(de->d_name, glob));
+    } while (IsDirectory(glob->directory, de) ||
+             !MatchesAnyGlob(de->d_name, glob));
 
     // Return the fully-qualified path, not just the bare filename.
     temp = M_StringJoin(glob->directory, DIR_SEPARATOR_S, de->d_name, NULL);
@@ -301,7 +300,7 @@ static void SortFilenames(char **filenames, int len, int flags)
     }
     pivot = filenames[len - 1];
     left_len = 0;
-    for (i = 0; i < len-1; ++i)
+    for (i = 0; i < len - 1; ++i)
     {
         if ((flags & GLOB_FLAG_NOCASE) != 0)
         {
@@ -380,4 +379,3 @@ const char *I_NextGlob(glob_t *glob)
 }
 
 #endif /* #ifdef NO_DIRENT_IMPLEMENTATION */
-

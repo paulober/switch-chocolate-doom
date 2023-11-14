@@ -17,7 +17,6 @@
 
 #include "doomtype.h"
 
-#include "config.h"
 #include "textscreen.h"
 
 #include "doomtype.h"
@@ -57,45 +56,15 @@ typedef struct
 
 #define DEFAULT_MISSION (&mission_configs[0])
 
-static mission_config_t mission_configs[] =
-{
-    {
-        "Doom",
-        doom,
-        IWAD_MASK_DOOM,
-        "doom",
-        "default.cfg",
-        PROGRAM_PREFIX "doom.cfg",
-        PROGRAM_PREFIX "doom"
-    },
-    {
-        "Heretic",
-        heretic,
-        IWAD_MASK_HERETIC,
-        "heretic",
-        "heretic.cfg",
-        PROGRAM_PREFIX "heretic.cfg",
-        PROGRAM_PREFIX "heretic"
-    },
-    {
-        "Hexen",
-        hexen,
-        IWAD_MASK_HEXEN,
-        "hexen",
-        "hexen.cfg",
-        PROGRAM_PREFIX "hexen.cfg",
-        PROGRAM_PREFIX "hexen"
-    },
-    {
-        "Strife",
-        strife,
-        IWAD_MASK_STRIFE,
-        "strife",
-        "strife.cfg",
-        PROGRAM_PREFIX "strife.cfg",
-        PROGRAM_PREFIX "strife"
-    }
-};
+static mission_config_t mission_configs[] = {
+    {"Doom", doom, IWAD_MASK_DOOM, "doom", "default.cfg",
+     PROGRAM_PREFIX "doom.cfg", PROGRAM_PREFIX "doom"},
+    {"Heretic", heretic, IWAD_MASK_HERETIC, "heretic", "heretic.cfg",
+     PROGRAM_PREFIX "heretic.cfg", PROGRAM_PREFIX "heretic"},
+    {"Hexen", hexen, IWAD_MASK_HEXEN, "hexen", "hexen.cfg",
+     PROGRAM_PREFIX "hexen.cfg", PROGRAM_PREFIX "hexen"},
+    {"Strife", strife, IWAD_MASK_STRIFE, "strife", "strife.cfg",
+     PROGRAM_PREFIX "strife.cfg", PROGRAM_PREFIX "strife"}};
 
 static GameSelectCallback game_selected_callback;
 
@@ -115,7 +84,7 @@ static void BindMiscVariables(void)
 {
     if (gamemission == doom)
     {
-        M_BindIntVariable("detaillevel",   &detailLevel);
+        M_BindIntVariable("detaillevel", &detailLevel);
         M_BindIntVariable("show_messages", &showMessages);
     }
 
@@ -143,17 +112,16 @@ static void BindMiscVariables(void)
         // Strife has a different default value than the other games
         screenblocks = 10;
 
-        M_BindStringVariable("back_flat",   &back_flat);
-        M_BindStringVariable("nickname",    &nickname);
+        M_BindStringVariable("back_flat", &back_flat);
+        M_BindStringVariable("nickname", &nickname);
 
-        M_BindIntVariable("screensize",     &screenblocks);
-        M_BindIntVariable("comport",        &comport);
+        M_BindIntVariable("screensize", &screenblocks);
+        M_BindIntVariable("comport", &comport);
     }
     else
     {
-        M_BindIntVariable("screenblocks",   &screenblocks);
+        M_BindIntVariable("screenblocks", &screenblocks);
     }
-
 }
 
 //
@@ -228,7 +196,7 @@ static mission_config_t *GetMissionForName(const char *name)
 {
     int i;
 
-    for (i=0; i<arrlen(mission_configs); ++i)
+    for (i = 0; i < arrlen(mission_configs); ++i)
     {
         if (!strcmp(mission_configs[i].name, name))
         {
@@ -250,7 +218,7 @@ static boolean CheckExecutableName(GameSelectCallback callback)
 
     exe_name = M_GetExecutableName();
 
-    for (i=0; i<arrlen(mission_configs); ++i)
+    for (i = 0; i < arrlen(mission_configs); ++i)
     {
         config = &mission_configs[i];
 
@@ -288,7 +256,7 @@ static void OpenGameSelectDialog(GameSelectCallback callback)
 
     // Add a button for each game.
 
-    for (i=0; i<arrlen(mission_configs); ++i)
+    for (i = 0; i < arrlen(mission_configs); ++i)
     {
         // Do we have any IWADs for this game installed?
         // If so, add a button.
@@ -298,9 +266,9 @@ static void OpenGameSelectDialog(GameSelectCallback callback)
         if (iwads[0] != NULL)
         {
             mission = &mission_configs[i];
-            TXT_AddWidget(window, TXT_NewButton2(mission_configs[i].label,
-                                                 GameSelected,
-                                                 &mission_configs[i]));
+            TXT_AddWidget(window,
+                          TXT_NewButton2(mission_configs[i].label, GameSelected,
+                                         &mission_configs[i]));
             ++num_games;
         }
 
@@ -381,4 +349,3 @@ const iwad_t **GetIwads(void)
 {
     return iwads;
 }
-

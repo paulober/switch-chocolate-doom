@@ -24,7 +24,6 @@
 
 #include "net_client.h"
 
-#include "config.h"
 #include "ct_chat.h"
 #include "doomdef.h"
 #include "deh_main.h"
@@ -48,10 +47,10 @@
 
 #include "heretic_icon.c"
 
-#define CT_KEY_GREEN    'g'
-#define CT_KEY_YELLOW   'y'
-#define CT_KEY_RED      'r'
-#define CT_KEY_BLUE     'b'
+#define CT_KEY_GREEN  'g'
+#define CT_KEY_YELLOW 'y'
+#define CT_KEY_RED    'r'
+#define CT_KEY_BLUE   'b'
 
 #define STARTUP_WINDOW_X 17
 #define STARTUP_WINDOW_Y 7
@@ -59,12 +58,12 @@
 GameMode_t gamemode = indetermined;
 const char *gamedescription = "unknown";
 
-boolean nomonsters;             // checkparm of -nomonsters
-boolean respawnparm;            // checkparm of -respawn
-boolean debugmode;              // checkparm of -debug
-boolean ravpic;                 // checkparm of -ravpic
-boolean cdrom;                  // true if cd-rom mode active
-boolean noartiskip;             // whether shift-enter skips an artifact
+boolean nomonsters;  // checkparm of -nomonsters
+boolean respawnparm; // checkparm of -respawn
+boolean debugmode;   // checkparm of -debug
+boolean ravpic;      // checkparm of -ravpic
+boolean cdrom;       // true if cd-rom mode active
+boolean noartiskip;  // whether shift-enter skips an artifact
 
 skill_t startskill;
 int startepisode;
@@ -85,7 +84,7 @@ void D_ConnectNetGame(void);
 void D_CheckNetGame(void);
 void D_PageDrawer(void);
 void D_AdvanceDemo(void);
-boolean F_Responder(event_t * ev);
+boolean F_Responder(event_t *ev);
 
 //---------------------------------------------------------------------------
 //
@@ -125,7 +124,7 @@ void DrawMessage(void)
 
     player = &players[consoleplayer];
     if (player->messageTics <= 0 || !player->message)
-    {                           // No message
+    { // No message
         return;
     }
     MN_DrTextA(player->message, 160 - MN_TextAWidth(player->message) / 2, 1);
@@ -148,9 +147,9 @@ void D_Display(void)
         R_ExecuteSetViewSize();
     }
 
-//
-// do buffered drawing
-//
+    //
+    // do buffered drawing
+    //
     switch (gamestate)
     {
         case GS_LEVEL:
@@ -184,12 +183,13 @@ void D_Display(void)
     {
         if (!netgame)
         {
-            V_DrawPatch(160, viewwindowy + 5, W_CacheLumpName(DEH_String("PAUSED"),
-                                                              PU_CACHE));
+            V_DrawPatch(160, viewwindowy + 5,
+                        W_CacheLumpName(DEH_String("PAUSED"), PU_CACHE));
         }
         else
         {
-            V_DrawPatch(160, 70, W_CacheLumpName(DEH_String("PAUSED"), PU_CACHE));
+            V_DrawPatch(160, 70,
+                        W_CacheLumpName(DEH_String("PAUSED"), PU_CACHE));
         }
     }
     // Handle player messages
@@ -323,9 +323,9 @@ void D_AdvanceDemo(void)
 
 void D_DoAdvanceDemo(void)
 {
-    players[consoleplayer].playerstate = PST_LIVE;      // don't reborn
+    players[consoleplayer].playerstate = PST_LIVE; // don't reborn
     advancedemo = false;
-    usergame = false;           // can't save / end game here
+    usergame = false; // can't save / end game here
     paused = false;
     gameaction = ga_nothing;
     demosequence = (demosequence + 1) % 7;
@@ -422,10 +422,10 @@ void D_CheckRecordFrom(void)
 
     filename = SV_Filename(myargv[p + 1][0] - '0');
     G_LoadGame(filename);
-    G_DoLoadGame();             // load the gameskill etc info from savegame
+    G_DoLoadGame(); // load the gameskill etc info from savegame
 
     G_RecordDemo(gameskill, 1, gameepisode, gamemap, myargv[p + 2]);
-    D_DoomLoop();               // never returns
+    D_DoomLoop(); // never returns
     free(filename);
 }
 
@@ -471,13 +471,13 @@ boolean D_AddFile(char *file)
 //  Startup Thermo code
 //
 //==========================================================
-#define MSG_Y       9
-#define THERM_X     14
-#define THERM_Y     14
+#define MSG_Y   9
+#define THERM_X 14
+#define THERM_Y 14
 
 int thermMax;
 int thermCurrent;
-char smsg[80];                  // status bar line
+char smsg[80]; // status bar line
 
 //
 //  Heretic startup screen shit
@@ -512,7 +512,7 @@ void drawstatus(void)
     TXT_BGColor(TXT_COLOR_BLUE, 0);
     TXT_FGColor(TXT_COLOR_BRIGHT_WHITE);
 
-    for (i=0; smsg[i] != '\0'; ++i) 
+    for (i = 0; smsg[i] != '\0'; ++i)
     {
         TXT_PutChar(smsg[i]);
     }
@@ -573,7 +573,7 @@ void initStartup(void)
         return;
     }
 
-    if (!TXT_Init()) 
+    if (!TXT_Init())
     {
         using_graphical_startup = false;
         return;
@@ -625,9 +625,9 @@ void CheckAbortStartup(void)
     // haleyjd: removed WATCOMC
     // haleyjd FIXME: this should actually work in text mode too, but how to
     // get input before SDL video init?
-    if(using_graphical_startup)
+    if (using_graphical_startup)
     {
-        if(TXT_GetChar() == 27)
+        if (TXT_GetChar() == 27)
             CleanExit();
     }
 }
@@ -675,17 +675,17 @@ void D_BindVariables(void)
 
     NET_BindVariables();
 
-    M_BindIntVariable("mouse_sensitivity",      &mouseSensitivity);
-    M_BindIntVariable("sfx_volume",             &snd_MaxVolume);
-    M_BindIntVariable("music_volume",           &snd_MusicVolume);
-    M_BindIntVariable("screenblocks",           &screenblocks);
-    M_BindIntVariable("snd_channels",           &snd_Channels);
+    M_BindIntVariable("mouse_sensitivity", &mouseSensitivity);
+    M_BindIntVariable("sfx_volume", &snd_MaxVolume);
+    M_BindIntVariable("music_volume", &snd_MusicVolume);
+    M_BindIntVariable("screenblocks", &screenblocks);
+    M_BindIntVariable("snd_channels", &snd_Channels);
     M_BindIntVariable("vanilla_savegame_limit", &vanilla_savegame_limit);
-    M_BindIntVariable("vanilla_demo_limit",     &vanilla_demo_limit);
-    M_BindIntVariable("show_endoom",            &show_endoom);
-    M_BindIntVariable("graphical_startup",      &graphical_startup);
+    M_BindIntVariable("vanilla_demo_limit", &vanilla_demo_limit);
+    M_BindIntVariable("show_endoom", &show_endoom);
+    M_BindIntVariable("graphical_startup", &graphical_startup);
 
-    for (i=0; i<10; ++i)
+    for (i = 0; i < 10; ++i)
     {
         char buf[12];
 
@@ -694,7 +694,7 @@ void D_BindVariables(void)
     }
 }
 
-// 
+//
 // Called at exit to display the ENDOOM screen (ENDTEXT in Heretic)
 //
 
@@ -772,9 +772,9 @@ void D_DoomMain(void)
     startmap = 1;
     autostart = false;
 
-//
-// get skill / episode / map from parms
-//
+    //
+    // get skill / episode / map from parms
+    //
 
     //!
     // @vanilla
@@ -836,9 +836,9 @@ void D_DoomMain(void)
         autostart = true;
     }
 
-//
-// init subsystems
-//
+    //
+    // init subsystems
+    //
     DEH_printf("V_Init: allocate screens.\n");
     V_Init();
 
@@ -1024,7 +1024,7 @@ void D_DoomMain(void)
     I_InitMusic();
 
     tprintf("NET_Init: Init network subsystem.\n", 1);
-    NET_Init ();
+    NET_Init();
 
     D_ConnectNetGame();
 
@@ -1045,11 +1045,11 @@ void D_DoomMain(void)
     {
         char temp[64];
         DEH_snprintf(temp, sizeof(temp),
-                     "Warp to Episode %d, Map %d, Skill %d ",
-                     startepisode, startmap, startskill + 1);
+                     "Warp to Episode %d, Map %d, Skill %d ", startepisode,
+                     startmap, startskill + 1);
         status(temp);
     }
-    wadprintf();                // print the added wadfiles
+    wadprintf(); // print the added wadfiles
 
     tprintf(DEH_String("MN_Init: Init menu system.\n"), 1);
     MN_Init();
@@ -1087,9 +1087,9 @@ void D_DoomMain(void)
     SB_Init();
     IncThermo();
 
-//
-// start the appropriate game based on params
-//
+    //
+    // start the appropriate game based on params
+    //
 
     D_CheckRecordFrom();
 
@@ -1105,22 +1105,22 @@ void D_DoomMain(void)
     if (p)
     {
         G_RecordDemo(startskill, 1, startepisode, startmap, myargv[p + 1]);
-        D_DoomLoop();           // Never returns
+        D_DoomLoop(); // Never returns
     }
 
     p = M_CheckParmWithArgs("-playdemo", 1);
     if (p)
     {
-        singledemo = true;      // Quit after one demo
+        singledemo = true; // Quit after one demo
         G_DeferedPlayDemo(demolumpname);
-        D_DoomLoop();           // Never returns
+        D_DoomLoop(); // Never returns
     }
 
     p = M_CheckParmWithArgs("-timedemo", 1);
     if (p)
     {
         G_TimeDemo(demolumpname);
-        D_DoomLoop();           // Never returns
+        D_DoomLoop(); // Never returns
     }
 
     //!
@@ -1136,9 +1136,9 @@ void D_DoomMain(void)
     {
         char *filename;
 
-	filename = SV_Filename(myargv[p + 1][0] - '0');
+        filename = SV_Filename(myargv[p + 1][0] - '0');
         G_LoadGame(filename);
-	free(filename);
+        free(filename);
     }
 
     // Check valid episode and map
@@ -1167,5 +1167,5 @@ void D_DoomMain(void)
 
     finishStartup();
 
-    D_DoomLoop();               // Never returns
+    D_DoomLoop(); // Never returns
 }

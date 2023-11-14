@@ -26,7 +26,6 @@
 #include "mode.h"
 
 #include "display.h"
-#include "config.h"
 
 #define WINDOW_HELP_URL "https://www.chocolate-doom.org/setup-display"
 
@@ -37,29 +36,14 @@ typedef struct
 } window_size_t;
 
 // List of aspect ratio-uncorrected window sizes:
-static window_size_t window_sizes_unscaled[] =
-{
-    { 320,  200 },
-    { 640,  400 },
-    { 960,  600 },
-    { 1280, 800 },
-    { 1600, 1000 },
-    { 0, 0},
+static window_size_t window_sizes_unscaled[] = {
+    {320, 200}, {640, 400}, {960, 600}, {1280, 800}, {1600, 1000}, {0, 0},
 };
 
 // List of aspect ratio-corrected window sizes:
-static window_size_t window_sizes_scaled[] =
-{
-    { 320,  240 },
-    { 512,  400 },
-    { 640,  480 },
-    { 800,  600 },
-    { 960,  720 },
-    { 1024, 800 },
-    { 1280, 960 },
-    { 1600, 1200 },
-    { 1920, 1440 },
-    { 0, 0},
+static window_size_t window_sizes_scaled[] = {
+    {320, 240},  {512, 400},  {640, 480},   {800, 600},   {960, 720},
+    {1024, 800}, {1280, 960}, {1600, 1200}, {1920, 1440}, {0, 0},
 };
 
 static char *video_driver = "";
@@ -193,19 +177,18 @@ static void AdvancedDisplayConfig(TXT_UNCAST_ARG(widget),
 
     TXT_SetColumnWidths(window, 40);
 
-    TXT_AddWidgets(window,
+    TXT_AddWidgets(
+        window,
         ar_checkbox = TXT_NewCheckBox("Force correct aspect ratio",
                                       &aspect_ratio_correct),
-        TXT_If(gamemission == heretic || gamemission == hexen
-            || gamemission == strife,
-            TXT_NewCheckBox("Graphical startup", &graphical_startup)),
-        TXT_If(gamemission == doom || gamemission == heretic
-            || gamemission == strife,
-            TXT_NewCheckBox("Show ENDOOM screen on exit",
-                            &show_endoom)),
+        TXT_If(gamemission == heretic || gamemission == hexen ||
+                   gamemission == strife,
+               TXT_NewCheckBox("Graphical startup", &graphical_startup)),
+        TXT_If(gamemission == doom || gamemission == heretic ||
+                   gamemission == strife,
+               TXT_NewCheckBox("Show ENDOOM screen on exit", &show_endoom)),
 #ifdef HAVE_LIBPNG
-        TXT_NewCheckBox("Save screenshots in PNG format",
-                        &png_screenshots),
+        TXT_NewCheckBox("Save screenshots in PNG format", &png_screenshots),
 #endif
         NULL);
 
@@ -223,10 +206,9 @@ void ConfigDisplay(TXT_UNCAST_ARG(widget), void *user_data)
     TXT_SetWindowHelpURL(window, WINDOW_HELP_URL);
 
     // Build window:
-    TXT_AddWidgets(window,
-        TXT_NewCheckBox("Full screen", &fullscreen),
-        TXT_NewConditional(&fullscreen, 0,
-            sizes_table = TXT_NewTable(3)),
+    TXT_AddWidgets(
+        window, TXT_NewCheckBox("Full screen", &fullscreen),
+        TXT_NewConditional(&fullscreen, 0, sizes_table = TXT_NewTable(3)),
         NULL);
 
     TXT_SetColumnWidths(window, 42);
@@ -236,7 +218,7 @@ void ConfigDisplay(TXT_UNCAST_ARG(widget), void *user_data)
     // fullscreen and windowed mode (which causes the window's
     // height to change).
     TXT_SetWindowPosition(window, TXT_HORIZ_CENTER, TXT_VERT_TOP,
-                                  TXT_SCREEN_W / 2, 6);
+                          TXT_SCREEN_W / 2, 6);
 
     GenerateSizesTable(NULL, sizes_table);
 
@@ -245,42 +227,41 @@ void ConfigDisplay(TXT_UNCAST_ARG(widget), void *user_data)
     // in there trigger a rebuild of it.
     advanced_button = TXT_NewWindowAction('a', "Advanced");
     TXT_SetWindowAction(window, TXT_HORIZ_CENTER, advanced_button);
-    TXT_SignalConnect(advanced_button, "pressed",
-                      AdvancedDisplayConfig, sizes_table);
+    TXT_SignalConnect(advanced_button, "pressed", AdvancedDisplayConfig,
+                      sizes_table);
 }
 
 void BindDisplayVariables(void)
 {
-    M_BindIntVariable("video_display",             &video_display);
-    M_BindIntVariable("aspect_ratio_correct",      &aspect_ratio_correct);
-    M_BindIntVariable("integer_scaling",           &integer_scaling);
-    M_BindIntVariable("fullscreen",                &fullscreen);
-    M_BindIntVariable("fullscreen_width",          &fullscreen_width);
-    M_BindIntVariable("fullscreen_height",         &fullscreen_height);
-    M_BindIntVariable("window_width",              &window_width);
-    M_BindIntVariable("window_height",             &window_height);
-    M_BindIntVariable("startup_delay",             &startup_delay);
-    M_BindStringVariable("video_driver",           &video_driver);
-    M_BindStringVariable("window_position",        &window_position);
-    M_BindIntVariable("usegamma",                  &usegamma);
-    M_BindIntVariable("png_screenshots",           &png_screenshots);
-    M_BindIntVariable("vga_porch_flash",           &vga_porch_flash);
-    M_BindIntVariable("force_software_renderer",   &force_software_renderer);
+    M_BindIntVariable("video_display", &video_display);
+    M_BindIntVariable("aspect_ratio_correct", &aspect_ratio_correct);
+    M_BindIntVariable("integer_scaling", &integer_scaling);
+    M_BindIntVariable("fullscreen", &fullscreen);
+    M_BindIntVariable("fullscreen_width", &fullscreen_width);
+    M_BindIntVariable("fullscreen_height", &fullscreen_height);
+    M_BindIntVariable("window_width", &window_width);
+    M_BindIntVariable("window_height", &window_height);
+    M_BindIntVariable("startup_delay", &startup_delay);
+    M_BindStringVariable("video_driver", &video_driver);
+    M_BindStringVariable("window_position", &window_position);
+    M_BindIntVariable("usegamma", &usegamma);
+    M_BindIntVariable("png_screenshots", &png_screenshots);
+    M_BindIntVariable("vga_porch_flash", &vga_porch_flash);
+    M_BindIntVariable("force_software_renderer", &force_software_renderer);
     M_BindIntVariable("max_scaling_buffer_pixels", &max_scaling_buffer_pixels);
 
-    if (gamemission == doom || gamemission == heretic
-     || gamemission == strife)
+    if (gamemission == doom || gamemission == heretic || gamemission == strife)
     {
-        M_BindIntVariable("show_endoom",               &show_endoom);
+        M_BindIntVariable("show_endoom", &show_endoom);
     }
 
     if (gamemission == doom || gamemission == strife)
     {
-        M_BindIntVariable("show_diskicon",             &show_diskicon);
+        M_BindIntVariable("show_diskicon", &show_diskicon);
     }
 
     if (gamemission == heretic || gamemission == hexen || gamemission == strife)
     {
-        M_BindIntVariable("graphical_startup",        &graphical_startup);
+        M_BindIntVariable("graphical_startup", &graphical_startup);
     }
 }

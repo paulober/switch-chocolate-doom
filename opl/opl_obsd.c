@@ -15,8 +15,6 @@
 //     OPL OpenBSD interface (also NetBSD)
 //
 
-#include "config.h"
-
 // OpenBSD has a i386_iopl on i386 and amd64_iopl on x86_64,
 // even though they do the same thing.  Take care of this
 // here, and map set_iopl to point to the appropriate name.
@@ -99,8 +97,7 @@ static void OPL_OpenBSD_PortWrite(opl_port_t port, unsigned int value)
     outb(opl_port_base + port, value);
 }
 
-opl_driver_t opl_openbsd_driver =
-{
+opl_driver_t opl_openbsd_driver = {
     "OpenBSD",
     OPL_OpenBSD_Init,
     OPL_OpenBSD_Shutdown,
@@ -115,4 +112,3 @@ opl_driver_t opl_openbsd_driver =
 };
 
 #endif /* #ifndef NO_OBSD_DRIVER */
-
