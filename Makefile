@@ -78,7 +78,7 @@ ARCH	:=	-march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE
 CFLAGS	:=	-g -Wall -O2 -ffunction-sections \
 			$(ARCH) $(DEFINES)
 
-CFLAGS	+=	$(INCLUDE) -D__SWITCH__ `sdl2-config --cflags`
+CFLAGS	+=	$(INCLUDE) -D__SWITCH__ `sdl2-config --cflags` `$(PREFIX)pkg-config --cflags SDL2_net`
 
 CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions
 
@@ -86,7 +86,7 @@ ASFLAGS	:=	-g $(ARCH)
 # TODO: may not need the portlibs sdl2 -I
 LDFLAGS	=	-specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map) -I$(DEVKITPRO)/portlibs/switch/include/SDL2
 
-LIBS	:= -lnx `sdl2-config --libs` -lSDL2_mixer -lSDL2_net -lmpg123 -lpng -lvorbisidec -lmodplug -logg -lopusfile -lopus -lsamplerate -lstdc++ -lm -lz
+LIBS	:= -lnx `sdl2-config --libs` -lSDL2_mixer `$(PREFIX)pkg-config --libs SDL2_net` -lmpg123 -lpng -lvorbisidec -lmodplug -logg -lopusfile -lopus -lsamplerate -lstdc++ -lm -lz
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
